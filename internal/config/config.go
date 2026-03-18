@@ -28,3 +28,6 @@ func Read(location string) (Config, error) {
 	}
 	return config, nil
 }
+
+func SetUser() {
+}
