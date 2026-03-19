@@ -14,11 +14,11 @@ type Config struct {
 }
 
 func Read(location string) (Config, error) {
-	home, err := os.UserHomeDir()
+	cfgLocation, err := getConfigFilePath()
 	if err != nil {
-		return Config{}, errors.New("unable to retrieve home directory")
+		return Config{}, err
 	}
-	content, err := os.ReadFile(home + configFileName)
+	content, err := os.ReadFile(cfgLocation)
 	if err != nil {
 		return Config{}, errors.New("unable to read config file")
 	}
@@ -27,6 +27,14 @@ func Read(location string) (Config, error) {
 		return Config{}, errors.New("unable to unmarshal config file")
 	}
 	return config, nil
+}
+
+func getConfigFilePath() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", errors.New("unable to retrieve home directory")
+	}
+	return home + configFileName, nil
 }
 
 func SetUser() {
