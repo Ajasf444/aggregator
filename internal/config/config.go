@@ -38,4 +38,5 @@ func getConfigFilePath() (string, error) {
 }
 
 func SetUser() {
+	// TODO:Marshal Config into JSON and then os.WriteFile()
 }
