@@ -6,7 +6,10 @@ import (
 	"os"
 )
 
-const configFileName = ".gatorconfig.json"
+const (
+	configFileName = ".gatorconfig.json"
+	perm           = os.FileMode(0o755) // chmod rwxrw-rw-
+)
 
 type Config struct {
 	DBURL           string `json:"db_url"`
@@ -29,6 +32,10 @@ func Read(location string) (Config, error) {
 	return config, nil
 }
 
+func SetUser() {
+	// TODO:Marshal Config into JSON and then write() config
+}
+
 func getConfigFilePath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -37,9 +44,17 @@ func getConfigFilePath() (string, error) {
 	return home + configFileName, nil
 }
 
-func SetUser() {
-	// TODO:Marshal Config into JSON and then os.WriteFile()
-}
-
-func write(cfg Config) {
+func write(cfg Config) error {
+	cfgLocation, err := getConfigFilePath()
+	if err != nil {
+		return err
+	}
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		return errors.New("unable to marshal config")
+	}
+	if err := os.WriteFile(cfgLocation, data, perm); err != nil {
+		return errors.New("unable to write config")
+	}
+	return nil
 }
