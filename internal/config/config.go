@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 )
 
@@ -16,7 +17,7 @@ type Config struct {
 	CurrentUserName string `json:"current_user_name"`
 }
 
-func Read(location string) (Config, error) {
+func Read() (Config, error) {
 	cfgLocation, err := getConfigFilePath()
 	if err != nil {
 		return Config{}, err
@@ -32,8 +33,13 @@ func Read(location string) (Config, error) {
 	return config, nil
 }
 
-func SetUser() {
-	// TODO:Marshal Config into JSON and then write() config
+func (cfg *Config) SetUser(user string) error {
+	cfg.CurrentUserName = user
+	err := write(*cfg)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func getConfigFilePath() (string, error) {
@@ -41,7 +47,7 @@ func getConfigFilePath() (string, error) {
 	if err != nil {
 		return "", errors.New("unable to retrieve home directory")
 	}
-	return home + configFileName, nil
+	return fmt.Sprintf("%s/%s", home, configFileName), nil
 }
 
 func write(cfg Config) error {
