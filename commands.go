@@ -10,3 +10,6 @@ type command struct {
 	name string
 	args []string
 }
+
+func handlerLogin(s *state, cmd command) error {
+}
