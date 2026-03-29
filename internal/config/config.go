@@ -3,8 +3,8 @@ package config
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
+	"path/filepath"
 )
 
 const (
@@ -18,6 +18,7 @@ type Config struct {
 }
 
 func Read() (Config, error) {
+	// TODO: use file, err := os.Open() and defer file.Close() and decoder := json.NewDecoder() and decoder.Decode(&cfg)
 	cfgLocation, err := getConfigFilePath()
 	if err != nil {
 		return Config{}, err
@@ -26,20 +27,16 @@ func Read() (Config, error) {
 	if err != nil {
 		return Config{}, errors.New("unable to read config file")
 	}
-	config := Config{}
-	if err := json.Unmarshal(content, &config); err != nil {
+	cfg := Config{}
+	if err := json.Unmarshal(content, &cfg); err != nil {
 		return Config{}, errors.New("unable to unmarshal config file")
 	}
-	return config, nil
+	return cfg, nil
 }
 
-func (cfg *Config) SetUser(user string) error {
-	cfg.CurrentUserName = user
-	err := write(*cfg)
-	if err != nil {
-		return err
-	}
-	return nil
+func (cfg *Config) SetUser(userName string) error {
+	cfg.CurrentUserName = userName
+	return write(*cfg)
 }
 
 func getConfigFilePath() (string, error) {
@@ -47,10 +44,11 @@ func getConfigFilePath() (string, error) {
 	if err != nil {
 		return "", errors.New("unable to retrieve home directory")
 	}
-	return fmt.Sprintf("%s/%s", home, configFileName), nil
+	return filepath.Join(home, configFileName), nil
 }
 
 func write(cfg Config) error {
+	// TODO: use file, err := os.Create() and defer file.Close() and encoder := json.NewEncoder() and encoder.Encode(cfg)
 	cfgLocation, err := getConfigFilePath()
 	if err != nil {
 		return err
