@@ -1,6 +1,10 @@
 package main
 
-import "github.com/Ajasf444/aggregator/internal/config"
+import (
+	"errors"
+
+	"github.com/Ajasf444/aggregator/internal/config"
+)
 
 type state struct {
 	cfg *config.Config
@@ -12,4 +16,8 @@ type command struct {
 }
 
 func handlerLogin(s *state, cmd command) error {
+	if len(cmd.args) == 0 {
+		return errors.New("expecting username argument")
+	}
+	return nil
 }
