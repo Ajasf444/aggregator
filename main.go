@@ -11,10 +11,5 @@ func main() {
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
-	cfg.SetUser("Stephen")
-	cfg, err = config.Read()
-	if err != nil {
-		fmt.Printf("%v\n", err)
-	}
-	fmt.Printf("%+v\n", cfg)
+	s := state{cfg: &cfg}
 }
