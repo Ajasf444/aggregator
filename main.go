@@ -12,4 +12,6 @@ func main() {
 		fmt.Printf("%v\n", err)
 	}
 	s := state{cfg: &cfg}
+	commands := commands{}
+	commands.register("login", handlerLogin)
 }
