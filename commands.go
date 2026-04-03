@@ -28,6 +28,12 @@ func (c *commands) run(s *state, cmd command) error {
 	return callback(s, cmd)
 }
 
+func NewCommands() commands {
+	return commands{
+		handlers: map[string]func(*state, command) error{},
+	}
+}
+
 func (c *commands) register(name string, f func(*state, command) error) {
 	c.handlers[name] = f
 }
