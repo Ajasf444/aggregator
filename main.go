@@ -22,11 +22,16 @@ func main() {
 		os.Exit(1)
 	}
 	args := allArgs[1:]
-	cmdString := args[1]
-	cmd, ok := commands.handlers[cmdString]
+	cmdName := args[0]
+	callback, ok := commands.handlers[cmdName]
 	if !ok {
-		fmt.Printf("Command %v not found", cmd)
+		fmt.Printf("Command %v not found.\n", cmdName)
 		os.Exit(1)
 	}
-	// TODO: write switch statement to handle cmd and arguments
+	// TODO: handle this better
+	err = callback(&s, command{name: cmdName, args: args[1:]})
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
