@@ -1,9 +1,9 @@
 -- +goose Up
-CREATE TABLE (
-  id int primary key,
-  created_at timestamp not null,
-  updated_at timestamp not null,
-  name string unique not null
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL,
+  name TEXT UNIQUE NOT NULL
 );
 
 -- +goose Down
