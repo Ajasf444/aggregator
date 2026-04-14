@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Ajasf444/aggregator/internal/config"
+	_ "github.com/lib/pq"
 )
 
 func main() {
