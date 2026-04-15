@@ -8,6 +8,7 @@ import (
 )
 
 type state struct {
+	// TODO: add database here
 	cfg *config.Config
 }
 

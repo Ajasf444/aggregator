@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 
@@ -9,6 +10,8 @@ import (
 )
 
 func main() {
+	// TODO: add database here
+	db, err := sql.Open("postgres", dbURL)
 	cfg, err := config.Read()
 	if err != nil {
 		fmt.Printf("%v\n", err)
