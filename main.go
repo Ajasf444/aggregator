@@ -10,12 +10,12 @@ import (
 )
 
 func main() {
-	// TODO: add database here
-	db, err := sql.Open("postgres", dbURL)
 	cfg, err := config.Read()
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
+	dbURL := cfg.DBURL
+	db, err := sql.Open("postgres", dbURL)
 	s := state{cfg: &cfg}
 	commands := NewCommands()
 	commands.register("login", handlerLogin)
