@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Ajasf444/aggregator/internal/config"
+	"github.com/Ajasf444/aggregator/internal/database"
 	_ "github.com/lib/pq"
 )
 
@@ -16,6 +17,7 @@ func main() {
 	}
 	dbURL := cfg.DBURL
 	db, err := sql.Open("postgres", dbURL)
+	dbQueries := database.New(db)
 	s := state{cfg: &cfg}
 	commands := NewCommands()
 	commands.register("login", handlerLogin)
