@@ -5,10 +5,11 @@ import (
 	"fmt"
 
 	"github.com/Ajasf444/aggregator/internal/config"
+	"github.com/Ajasf444/aggregator/internal/database"
 )
 
 type state struct {
-	// TODO: add database here
+	db  *database.Queries
 	cfg *config.Config
 }
 
