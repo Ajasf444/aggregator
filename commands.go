@@ -50,3 +50,8 @@ func handlerLogin(s *state, cmd command) error {
 	fmt.Printf("%v has been set as user.\n", s.cfg.CurrentUserName)
 	return nil
 }
+
+func handlerRegister(s *state, cmd command) error {
+	// TODO: add logic
+	return nil
+}
