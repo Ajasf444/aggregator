@@ -52,6 +52,9 @@ func handlerLogin(s *state, cmd command) error {
 }
 
 func handlerRegister(s *state, cmd command) error {
+	if len(cmd.args) == 0 {
+		return errors.New("register command expecting name argument")
+	}
 	// TODO: add logic
 	return nil
 }
