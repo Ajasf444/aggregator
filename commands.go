@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -56,5 +57,6 @@ func handlerRegister(s *state, cmd command) error {
 		return errors.New("register command expecting name argument")
 	}
 	// TODO: add logic
+	ctx := context.Background()
 	return nil
 }
