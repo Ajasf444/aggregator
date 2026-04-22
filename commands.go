@@ -56,7 +56,7 @@ func handlerRegister(s *state, cmd command) error {
 	if len(cmd.args) == 0 {
 		return errors.New("register command expecting name argument")
 	}
-	// TODO: add logic
 	ctx := context.Background()
+	// TODO: invoke queries from state
 	return nil
 }
