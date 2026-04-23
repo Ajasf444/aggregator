@@ -18,9 +18,10 @@ func main() {
 	dbURL := cfg.DBURL
 	db, err := sql.Open("postgres", dbURL)
 	dbQueries := database.New(db)
-	s := state{cfg: &cfg}
+	s := state{cfg: &cfg, db: dbQueries}
 	commands := NewCommands()
 	commands.register("login", handlerLogin)
+	commands.register("register", handlerRegister)
 
 	allArgs := os.Args
 	if len(allArgs) == 1 {
