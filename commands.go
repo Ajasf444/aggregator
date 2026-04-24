@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/Ajasf444/aggregator/internal/config"
 	"github.com/Ajasf444/aggregator/internal/database"
+	"github.com/google/uuid"
 )
 
 type state struct {
@@ -56,7 +58,12 @@ func handlerRegister(s *state, cmd command) error {
 	if len(cmd.args) == 0 {
 		return errors.New("register command expecting name argument")
 	}
+	params := database.CreateUserParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Name: cmd.args[0]}
 	ctx := context.Background()
 	// TODO: invoke queries from state
+	user, err := s.db.CreateUser(ctx, params)
+	if err != nil {
+		return err
+	}
 	return nil
 }
