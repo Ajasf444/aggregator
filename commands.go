@@ -65,5 +65,9 @@ func handlerRegister(s *state, cmd command) error {
 	if err != nil {
 		return err
 	}
+	err = s.cfg.SetUser(user.Name)
+	if err != nil {
+		return err
+	}
 	return nil
 }
