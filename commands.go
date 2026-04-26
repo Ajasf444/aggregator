@@ -69,5 +69,7 @@ func handlerRegister(s *state, cmd command) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("User was created.")
+	fmt.Println(user)
 	return nil
 }
