@@ -60,7 +60,6 @@ func handlerRegister(s *state, cmd command) error {
 	}
 	params := database.CreateUserParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Name: cmd.args[0]}
 	ctx := context.Background()
-	// TODO: invoke queries from state
 	user, err := s.db.CreateUser(ctx, params)
 	if err != nil {
 		return err
