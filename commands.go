@@ -44,6 +44,7 @@ func (c *commands) register(name string, f func(*state, command) error) {
 }
 
 func handlerLogin(s *state, cmd command) error {
+	// TODO: check if username exists in database
 	if len(cmd.args) == 0 {
 		return errors.New("login command expecting username argument")
 	}
