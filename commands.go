@@ -44,11 +44,15 @@ func (c *commands) register(name string, f func(*state, command) error) {
 }
 
 func handlerLogin(s *state, cmd command) error {
-	// TODO: check if username exists in database
 	if len(cmd.args) == 0 {
 		return errors.New("login command expecting username argument")
 	}
-	if err := s.cfg.SetUser(cmd.args[0]); err != nil {
+	ctx := context.Background()
+	user, err := s.db.GetUser(ctx, cmd.args[0])
+	if err != nil {
+		return err
+	}
+	if err := s.cfg.SetUser(user.Name); err != nil {
 		return err
 	}
 	fmt.Printf("%v has been set as user.\n", s.cfg.CurrentUserName)
