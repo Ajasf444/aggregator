@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -36,6 +37,7 @@ func Read() (Config, error) {
 
 func (cfg *Config) SetUser(userName string) error {
 	cfg.CurrentUserName = userName
+	fmt.Printf("%v has been set as user.\n", cfg.CurrentUserName)
 	return write(*cfg)
 }
 

@@ -55,7 +55,6 @@ func handlerLogin(s *state, cmd command) error {
 	if err := s.cfg.SetUser(user.Name); err != nil {
 		return err
 	}
-	fmt.Printf("%v has been set as user.\n", s.cfg.CurrentUserName)
 	return nil
 }
 
@@ -69,11 +68,11 @@ func handlerRegister(s *state, cmd command) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("User was created.")
+	fmt.Println(user)
 	err = s.cfg.SetUser(user.Name)
 	if err != nil {
 		return err
 	}
-	fmt.Println("User was created.")
-	fmt.Println(user)
 	return nil
 }
