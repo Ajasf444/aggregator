@@ -17,6 +17,10 @@ func main() {
 	}
 	dbURL := cfg.DBURL
 	db, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		fmt.Println("unable to connect to database")
+		os.Exit(1)
+	}
 	dbQueries := database.New(db)
 	s := state{cfg: &cfg, db: dbQueries}
 	commands := NewCommands()
@@ -29,14 +33,8 @@ func main() {
 		os.Exit(1)
 	}
 	args := allArgs[1:]
-	cmdName := args[0]
-	callback, ok := commands.handlers[cmdName]
-	if !ok {
-		fmt.Printf("Command %v not found.\n", cmdName)
-		os.Exit(1)
-	}
-	// TODO: handle this better
-	err = callback(&s, command{name: cmdName, args: args[1:]})
+	cmdName, cmdArgs := args[0], args[1:]
+	err = commands.run(&s, command{name: cmdName, args: cmdArgs})
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
