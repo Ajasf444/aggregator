@@ -76,3 +76,10 @@ func handlerRegister(s *state, cmd command) error {
 	}
 	return nil
 }
+
+func handlerReset(s *state, cmd command) error {
+	ctx := context.Background()
+	s.db.DeleteUsers(ctx)
+	fmt.Println("Database reset.")
+	return nil
+}

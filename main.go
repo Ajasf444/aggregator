@@ -26,6 +26,7 @@ func main() {
 	commands := NewCommands()
 	commands.register("login", handlerLogin)
 	commands.register("register", handlerRegister)
+	commands.register("reset", handlerReset)
 
 	allArgs := os.Args
 	if len(allArgs) == 1 {
