@@ -104,3 +104,7 @@ func handlerGetUsers(s *state, cmd command) error {
 	fmt.Println(strings.Join(users, "\n"))
 	return nil
 }
+
+func handlerAggregate(s *state, cmd command) error {
+	return nil
+}
