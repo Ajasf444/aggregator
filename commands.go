@@ -9,6 +9,7 @@ import (
 
 	"github.com/Ajasf444/aggregator/internal/config"
 	"github.com/Ajasf444/aggregator/internal/database"
+	"github.com/Ajasf444/aggregator/internal/rss"
 	"github.com/google/uuid"
 )
 
@@ -108,3 +109,5 @@ func handlerGetUsers(s *state, cmd command) error {
 func handlerAggregate(s *state, cmd command) error {
 	return nil
 }
+
+func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error)
