@@ -110,4 +110,6 @@ func handlerAggregate(s *state, cmd command) error {
 	return nil
 }
 
-func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error)
+func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
+	return nil, nil
+}
