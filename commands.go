@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 
@@ -111,5 +112,6 @@ func handlerAggregate(s *state, cmd command) error {
 }
 
 func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
 	return nil, nil
 }
