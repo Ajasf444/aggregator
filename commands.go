@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -113,5 +115,21 @@ func handlerAggregate(s *state, cmd command) error {
 
 func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
-	return nil, nil
+	if err != nil {
+		return &rss.RSSFeed{}, err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return &rss.RSSFeed{}, err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return &rss.RSSFeed{}, err
+	}
+	rssFeed := &rss.RSSFeed{}
+	if err := xml.Unmarshal(data, rssFeed); err != nil {
+		return &rss.RSSFeed{}, err
+	}
+	return rssFeed, nil
 }
