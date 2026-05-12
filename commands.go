@@ -110,11 +110,13 @@ func handlerGetUsers(s *state, cmd command) error {
 }
 
 func handlerAggregate(s *state, cmd command) error {
+	// TODO: invoke fetchFeed()
 	return nil
 }
 
 func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
+	// TODO: add User-Agent Header to request
 	if err != nil {
 		return &rss.RSSFeed{}, err
 	}
@@ -131,5 +133,6 @@ func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
 	if err := xml.Unmarshal(data, rssFeed); err != nil {
 		return &rss.RSSFeed{}, err
 	}
+	rssFeed.UnescapeStrings()
 	return rssFeed, nil
 }
