@@ -16,6 +16,8 @@ import (
 	"github.com/google/uuid"
 )
 
+const URL = "https://wagslane.dev/index.xml"
+
 type state struct {
 	db  *database.Queries
 	cfg *config.Config
@@ -110,7 +112,12 @@ func handlerGetUsers(s *state, cmd command) error {
 }
 
 func handlerAggregate(s *state, cmd command) error {
-	// TODO: invoke fetchFeed()
+	ctx := context.Background()
+	rssFeed, err := fetchFeed(ctx, URL)
+	if err != nil {
+		return err
+	}
+	fmt.Println(rssFeed)
 	return nil
 }
 
