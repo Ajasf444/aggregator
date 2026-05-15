@@ -19,18 +19,22 @@ type Config struct {
 }
 
 func Read() (Config, error) {
-	// TODO: use file, err := os.Open() and defer file.Close() and decoder := json.NewDecoder() and decoder.Decode(&cfg)
 	cfgLocation, err := getConfigFilePath()
 	if err != nil {
 		return Config{}, err
 	}
-	content, err := os.ReadFile(cfgLocation)
+
+	file, err := os.Open(cfgLocation)
 	if err != nil {
-		return Config{}, errors.New("unable to read config file")
+		return Config{}, err
 	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
 	cfg := Config{}
-	if err := json.Unmarshal(content, &cfg); err != nil {
-		return Config{}, errors.New("unable to unmarshal config file")
+	err = decoder.Decode(&cfg)
+	if err != nil {
+		return Config{}, err
 	}
 	return cfg, nil
 }
@@ -50,17 +54,21 @@ func getConfigFilePath() (string, error) {
 }
 
 func write(cfg Config) error {
-	// TODO: use file, err := os.Create() and defer file.Close() and encoder := json.NewEncoder() and encoder.Encode(cfg)
 	cfgLocation, err := getConfigFilePath()
 	if err != nil {
 		return err
 	}
-	data, err := json.Marshal(cfg)
+
+	file, err := os.Create(cfgLocation)
 	if err != nil {
-		return errors.New("unable to marshal config")
+		return err
 	}
-	if err := os.WriteFile(cfgLocation, data, perm); err != nil {
-		return errors.New("unable to write config")
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	err = encoder.Encode(cfg)
+	if err != nil {
+		return err
 	}
 	return nil
 }
