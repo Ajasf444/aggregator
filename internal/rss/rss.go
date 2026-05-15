@@ -1,6 +1,12 @@
 package rss
 
-import "html"
+import (
+	"context"
+	"encoding/xml"
+	"html"
+	"io"
+	"net/http"
+)
 
 type RSSFeed struct {
 	Channel struct {
@@ -29,4 +35,27 @@ func (r *RSSFeed) UnescapeStrings() {
 func (r *RSSItem) unescapeStrings() {
 	r.Title = html.UnescapeString(r.Title)
 	r.Description = html.UnescapeString(r.Description)
+}
+
+func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
+	if err != nil {
+		return &RSSFeed{}, err
+	}
+	req.Header.Set("User-Agent", "gator")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return &RSSFeed{}, err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return &RSSFeed{}, err
+	}
+	rssFeed := &RSSFeed{}
+	if err := xml.Unmarshal(data, rssFeed); err != nil {
+		return &RSSFeed{}, err
+	}
+	rssFeed.UnescapeStrings()
+	return rssFeed, nil
 }
