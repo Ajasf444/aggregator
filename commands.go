@@ -123,10 +123,10 @@ func handlerAggregate(s *state, cmd command) error {
 
 func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
-	// TODO: add User-Agent Header to request
 	if err != nil {
 		return &rss.RSSFeed{}, err
 	}
+	req.Header.Set("User-Agent", "gator")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return &rss.RSSFeed{}, err
@@ -142,4 +142,9 @@ func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
 	}
 	rssFeed.UnescapeStrings()
 	return rssFeed, nil
+}
+
+func handlerAddFeed(s *state, cmd command) error {
+	// TODO: add logic
+	return nil
 }
