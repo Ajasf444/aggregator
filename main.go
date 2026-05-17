@@ -22,7 +22,7 @@ func main() {
 		os.Exit(1)
 	}
 	dbQueries := database.New(db)
-	s := state{cfg: &cfg, db: dbQueries}
+	s := NewState(&cfg, dbQueries)
 	commands := NewCommands()
 	commands.register("login", handlerLogin)
 	commands.register("register", handlerRegister)
