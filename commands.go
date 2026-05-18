@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"encoding/xml"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
 	"strings"
 	"time"
 
@@ -46,6 +43,13 @@ func NewCommands() commands {
 	}
 }
 
+func NewState(cfg *config.Config, db *database.Queries) state {
+	return state{
+		cfg: cfg,
+		db:  db,
+	}
+}
+
 func (c *commands) register(name string, f func(*state, command) error) {
 	c.handlers[name] = f
 }
@@ -70,7 +74,12 @@ func handlerRegister(s *state, cmd command) error {
 		return errors.New("register command expecting name argument")
 	}
 	ctx := context.Background()
-	params := database.CreateUserParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Name: cmd.args[0]}
+	params := database.CreateUserParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      cmd.args[0],
+	}
 	user, err := s.db.CreateUser(ctx, params)
 	if err != nil {
 		return err
@@ -87,6 +96,7 @@ func handlerRegister(s *state, cmd command) error {
 func handlerReset(s *state, cmd command) error {
 	ctx := context.Background()
 	s.db.DeleteUsers(ctx)
+	s.db.DeleteFeeds(ctx)
 	fmt.Println("Database reset.")
 	return nil
 }
@@ -113,7 +123,7 @@ func handlerGetUsers(s *state, cmd command) error {
 
 func handlerAggregate(s *state, cmd command) error {
 	ctx := context.Background()
-	rssFeed, err := fetchFeed(ctx, URL)
+	rssFeed, err := rss.FetchFeed(ctx, URL)
 	if err != nil {
 		return err
 	}
@@ -121,30 +131,28 @@ func handlerAggregate(s *state, cmd command) error {
 	return nil
 }
 
-func fetchFeed(ctx context.Context, feedURL string) (*rss.RSSFeed, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
-	if err != nil {
-		return &rss.RSSFeed{}, err
-	}
-	req.Header.Set("User-Agent", "gator")
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return &rss.RSSFeed{}, err
-	}
-	defer resp.Body.Close()
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return &rss.RSSFeed{}, err
-	}
-	rssFeed := &rss.RSSFeed{}
-	if err := xml.Unmarshal(data, rssFeed); err != nil {
-		return &rss.RSSFeed{}, err
-	}
-	rssFeed.UnescapeStrings()
-	return rssFeed, nil
-}
-
 func handlerAddFeed(s *state, cmd command) error {
-	// TODO: add logic
+	if len(cmd.args) < 2 {
+		return errors.New("addfeed command expecting a name and url")
+	}
+	ctx := context.Background()
+	user, err := s.db.GetUser(ctx, s.cfg.CurrentUserName)
+	if err != nil {
+		return err
+	}
+	params := database.CreateFeedParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      cmd.args[0],
+		Url:       cmd.args[1],
+		UserID:    user.ID,
+	}
+	feed, err := s.db.CreateFeed(ctx, params)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Feed was created.")
+	fmt.Println(feed)
 	return nil
 }
