@@ -24,12 +24,6 @@ func main() {
 	dbQueries := database.New(db)
 	s := NewState(&cfg, dbQueries)
 	commands := NewCommands()
-	commands.register("login", handlerLogin)
-	commands.register("register", handlerRegister)
-	commands.register("reset", handlerReset)
-	commands.register("users", handlerGetUsers)
-	commands.register("agg", handlerAggregate)
-	commands.register("addfeed", handlerAddFeed)
 
 	allArgs := os.Args
 	if len(allArgs) == 1 {
@@ -38,7 +32,7 @@ func main() {
 	}
 	args := allArgs[1:]
 	cmdName, cmdArgs := args[0], args[1:]
-	err = commands.run(&s, command{name: cmdName, args: cmdArgs})
+	err = commands.run(s, command{name: cmdName, args: cmdArgs})
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

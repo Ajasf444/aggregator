@@ -29,6 +29,20 @@ type commands struct {
 	handlers map[string]func(*state, command) error
 }
 
+func NewCommands() *commands {
+	c := &commands{
+		handlers: map[string]func(*state, command) error{},
+	}
+	c.register("login", handlerLogin)
+	c.register("register", handlerRegister)
+	c.register("reset", handlerReset)
+	c.register("users", handlerGetUsers)
+	c.register("agg", handlerAggregate)
+	c.register("addfeed", handlerAddFeed)
+	c.register("feeds", handlerFeeds)
+	return c
+}
+
 func (c *commands) run(s *state, cmd command) error {
 	callback, ok := c.handlers[cmd.name]
 	if !ok {
@@ -37,14 +51,8 @@ func (c *commands) run(s *state, cmd command) error {
 	return callback(s, cmd)
 }
 
-func NewCommands() commands {
-	return commands{
-		handlers: map[string]func(*state, command) error{},
-	}
-}
-
-func NewState(cfg *config.Config, db *database.Queries) state {
-	return state{
+func NewState(cfg *config.Config, db *database.Queries) *state {
+	return &state{
 		cfg: cfg,
 		db:  db,
 	}
@@ -154,5 +162,9 @@ func handlerAddFeed(s *state, cmd command) error {
 	}
 	fmt.Println("Feed was created.")
 	fmt.Println(feed)
+	return nil
+}
+
+func handlerFeeds(s *state, cmd command) error {
 	return nil
 }
