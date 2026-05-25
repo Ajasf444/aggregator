@@ -40,6 +40,7 @@ func NewCommands() *commands {
 	c.register("agg", handlerAggregate)
 	c.register("addfeed", handlerAddFeed)
 	c.register("feeds", handlerFeeds)
+	c.register("follow", handlerFollow)
 	return c
 }
 
@@ -173,6 +174,18 @@ func handlerFeeds(s *state, cmd command) error {
 	}
 	for _, feed := range feeds {
 		fmt.Printf("%v %v %v\n", feed.Feedname, feed.Url, feed.Username)
+	}
+	return nil
+}
+
+func handlerFollow(s *state, cmd command) error {
+	URL := cmd.args[0]
+	// TODO: create query to return feed info from URL
+	params := database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		// TODO: finish populating parameters
 	}
 	return nil
 }
