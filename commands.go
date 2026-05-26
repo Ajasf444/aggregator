@@ -180,12 +180,21 @@ func handlerFeeds(s *state, cmd command) error {
 
 func handlerFollow(s *state, cmd command) error {
 	URL := cmd.args[0]
-	// TODO: create query to return feed info from URL
+	ctx := context.Background()
+	feed, err := s.db.GetFeedFromURL(ctx, URL)
+	if err != nil {
+		return err
+	}
+	user, err := s.db.GetUser(ctx, s.cfg.CurrentUserName)
+	if err != nil {
+		return err
+	}
 	params := database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		// TODO: finish populating parameters
+		UserID:    user.ID,
+		FeedID:    feed.ID,
 	}
 	return nil
 }
