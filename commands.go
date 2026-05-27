@@ -196,5 +196,10 @@ func handlerFollow(s *state, cmd command) error {
 		UserID:    user.ID,
 		FeedID:    feed.ID,
 	}
+	follow, err := s.db.CreateFeedFollow(ctx, params)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%v\n", follow)
 	return nil
 }
