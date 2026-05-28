@@ -41,6 +41,7 @@ func NewCommands() *commands {
 	c.register("addfeed", handlerAddFeed)
 	c.register("feeds", handlerFeeds)
 	c.register("follow", handlerFollow)
+	c.register("follows", handlerFollows)
 	return c
 }
 
@@ -201,5 +202,9 @@ func handlerFollow(s *state, cmd command) error {
 		return err
 	}
 	fmt.Printf("%v\n", follow)
+	return nil
+}
+
+func handlerFollows(s *state, cmd command) error {
 	return nil
 }
