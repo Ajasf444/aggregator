@@ -206,5 +206,14 @@ func handlerFollow(s *state, cmd command) error {
 }
 
 func handlerFollows(s *state, cmd command) error {
+	username := s.cfg.CurrentUserName
+	ctx := context.Background()
+	feedFollows, err := s.db.GetFeedFollowsForUser(ctx, username)
+	if err != nil {
+		return err
+	}
+	for i, _ := range feedFollows {
+		feedFollows[i].
+	}
 	return nil
 }
