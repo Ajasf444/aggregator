@@ -41,7 +41,7 @@ func NewCommands() *commands {
 	c.register("addfeed", handlerAddFeed)
 	c.register("feeds", handlerFeeds)
 	c.register("follow", handlerFollow)
-	c.register("follows", handlerFollows)
+	c.register("following", handlerFollowing)
 	return c
 }
 
@@ -150,7 +150,7 @@ func handlerAddFeed(s *state, cmd command) error {
 	if err != nil {
 		return err
 	}
-	params := database.CreateFeedParams{
+	feedParams := database.CreateFeedParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -158,12 +158,27 @@ func handlerAddFeed(s *state, cmd command) error {
 		Url:       cmd.args[1],
 		UserID:    user.ID,
 	}
-	feed, err := s.db.CreateFeed(ctx, params)
+	feed, err := s.db.CreateFeed(ctx, feedParams)
 	if err != nil {
 		return err
 	}
 	fmt.Println("Feed was created.")
 	fmt.Println(feed)
+
+	followParams := database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		UserID:    user.ID,
+		FeedID:    feed.ID,
+	}
+
+	follow, err := s.db.CreateFeedFollow(ctx, followParams)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%v\n", follow)
+
 	return nil
 }
 
@@ -205,15 +220,15 @@ func handlerFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerFollows(s *state, cmd command) error {
+func handlerFollowing(s *state, cmd command) error {
 	username := s.cfg.CurrentUserName
 	ctx := context.Background()
 	feedFollows, err := s.db.GetFeedFollowsForUser(ctx, username)
 	if err != nil {
 		return err
 	}
-	for i, _ := range feedFollows {
-		feedFollows[i].
+	for i := range feedFollows {
+		fmt.Println(feedFollows[i])
 	}
 	return nil
 }
