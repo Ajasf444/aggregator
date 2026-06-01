@@ -221,6 +221,7 @@ func handlerFollow(s *state, cmd command) error {
 }
 
 func handlerFollowing(s *state, cmd command) error {
+	// TODO: change GetFeedFollowsForUser signature to be based on user ID instead of name
 	username := s.cfg.CurrentUserName
 	ctx := context.Background()
 	feedFollows, err := s.db.GetFeedFollowsForUser(ctx, username)
