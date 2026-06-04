@@ -38,10 +38,11 @@ func NewCommands() *commands {
 	c.register("reset", handlerReset)
 	c.register("users", handlerGetUsers)
 	c.register("agg", handlerAggregate)
-	c.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	c.register("feeds", handlerFeeds)
+	c.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	c.register("follow", middlewareLoggedIn(handlerFollow))
 	c.register("following", middlewareLoggedIn(handlerFollowing))
+	c.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 	return c
 }
 
@@ -221,6 +222,20 @@ func handlerFollowing(s *state, cmd command, user database.User) error {
 	for i := range feedFollows {
 		fmt.Println(feedFollows[i])
 	}
+	return nil
+}
+
+func handlerUnfollow(s *state, cmd command, user database.User) error {
+	ctx := context.Background()
+	feed, err := s.db.GetFeedFromURL(ctx, cmd.args[0])
+	if err != nil {
+		return err
+	}
+	params := database.DeleteFeedFollowParams{UserID: user.ID, FeedID: feed.ID}
+	if err := s.db.DeleteFeedFollow(ctx, params); err != nil {
+		return err
+	}
+	fmt.Printf("%v unfollowed %v\n", user.Name, feed.Name)
 	return nil
 }
 
