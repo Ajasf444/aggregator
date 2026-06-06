@@ -11,12 +11,18 @@ import (
 )
 
 func main() {
+	allArgs := os.Args
+	if len(allArgs) == 1 {
+		fmt.Println("Not enough arguments provided.")
+		os.Exit(1)
+	}
+
 	cfg, err := config.Read()
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
-	dbURL := cfg.DBURL
-	db, err := sql.Open("postgres", dbURL)
+
+	db, err := sql.Open("postgres", cfg.DBURL)
 	if err != nil {
 		fmt.Println("unable to connect to database")
 		os.Exit(1)
@@ -25,11 +31,6 @@ func main() {
 	s := NewState(&cfg, dbQueries)
 	commands := NewCommands()
 
-	allArgs := os.Args
-	if len(allArgs) == 1 {
-		fmt.Println("Not enough arguments provided.")
-		os.Exit(1)
-	}
 	args := allArgs[1:]
 	cmdName, cmdArgs := args[0], args[1:]
 	err = commands.run(s, command{name: cmdName, args: cmdArgs})
