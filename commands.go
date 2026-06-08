@@ -133,6 +133,7 @@ func handlerGetUsers(s *state, cmd command) error {
 }
 
 func handlerAggregate(s *state, cmd command) error {
+	// TODO: add fetching feed logic here
 	ctx := context.Background()
 	rssFeed, err := rss.FetchFeed(ctx, URL)
 	if err != nil {
