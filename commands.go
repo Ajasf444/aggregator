@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
@@ -132,9 +133,25 @@ func handlerGetUsers(s *state, cmd command) error {
 	return nil
 }
 
-func handlerAggregate(s *state, cmd command) error {
-	// TODO: add fetching feed logic here
+// TODO: use this logic in handlerAggregate
+func handlerMark(s *state, cmd command) error {
 	ctx := context.Background()
+	params := database.MarkFetchedFeedParams{
+		ID: uuid.New(),
+		LastFetchedAt: sql.NullTime{
+			Time:  time.Now(),
+			Valid: true,
+		},
+	}
+	if err := s.db.MarkFetchedFeed(ctx, params); err != nil {
+		return err
+	}
+	return nil
+}
+
+func handlerAggregate(s *state, cmd command) error {
+	ctx := context.Background()
+	// TODO: add fetching feed logic here, replace URL with feed follow URLs
 	rssFeed, err := rss.FetchFeed(ctx, URL)
 	if err != nil {
 		return err
