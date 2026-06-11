@@ -134,10 +134,10 @@ func handlerGetUsers(s *state, cmd command) error {
 }
 
 // TODO: use this logic in handlerAggregate
-func handlerMark(s *state, cmd command) error {
+func mark(s *state, cmd command) error {
 	ctx := context.Background()
 	params := database.MarkFetchedFeedParams{
-		ID: uuid.New(),
+		ID: uuid.New(), // TODO: change this ID to be passed in
 		LastFetchedAt: sql.NullTime{
 			Time:  time.Now(),
 			Valid: true,
