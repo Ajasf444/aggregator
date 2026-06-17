@@ -32,7 +32,7 @@ func NewCommands() *commands {
 	c.register("reset", handlerReset)
 	c.register("users", handlerGetUsers)
 	c.register("feeds", handlerFeeds)
-	c.register("agg", middlewareLoggedIn(handlerAggregate))
+	c.register("agg", handlerAggregate)
 	c.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	c.register("follow", middlewareLoggedIn(handlerFollow))
 	c.register("following", middlewareLoggedIn(handlerFollowing))

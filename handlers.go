@@ -93,6 +93,17 @@ func handlerFeeds(s *state, cmd command) error {
 	return nil
 }
 
+func handlerAggregate(s *state, cmd command) error {
+	ctx := context.Background()
+	// TODO: add fetching feed logic here, replace URL with feed follow URLs
+	rssFeed, err := rss.FetchFeed(ctx, URL)
+	if err != nil {
+		return err
+	}
+	fmt.Println(rssFeed)
+	return nil
+}
+
 // TODO: use this logic in scrapeFeeds()
 func markFeed(s *state, URL string) error {
 	ctx := context.Background()
@@ -110,6 +121,16 @@ func markFeed(s *state, URL string) error {
 }
 
 func scrapeFeeds(s *state) error {
+	ctx := context.Background()
+	feed, err := s.db.GetNextFeedToFetch(ctx)
+	if err != nil {
+		return err
+	}
+	URL := feed.Url
+	if err = markFeed(s, URL); err != nil {
+		return err
+	}
+	// TODO: fetch feed
 	return nil
 }
 
@@ -123,17 +144,6 @@ func middlewareLoggedIn(handler func(s *state, cmd command, user database.User) 
 		}
 		return handler(s, cmd, user)
 	}
-}
-
-func handlerAggregate(s *state, cmd command, user database.User) error {
-	ctx := context.Background()
-	// TODO: add fetching feed logic here, replace URL with feed follow URLs
-	rssFeed, err := rss.FetchFeed(ctx, URL)
-	if err != nil {
-		return err
-	}
-	fmt.Println(rssFeed)
-	return nil
 }
 
 func handlerAddFeed(s *state, cmd command, user database.User) error {
